@@ -19,9 +19,6 @@ describe('broccoli-lint-remark', function() {
 
   beforeEach(co.wrap(function *() {
     input = yield createTempDir();
-    // console = {
-    //   log(line) {}
-    // };
     const modulesPath = path.join(process.cwd(), 'node_modules');
     const modulesTmpPath = path.join(input.path(), 'node_modules');
     // Clone "node_modules" no tmp dir.
@@ -42,32 +39,6 @@ describe('broccoli-lint-remark', function() {
 
     expect(BroccoliRemark.testGenerators).to.deep.equal(['qunit', 'mocha']);
   });
-
-  // it('logs errors to the console (using factory function)', co.wrap(function *() {
-  //   input.write({
-  //     '.remarkrc': `{
-  //       "plugins": [
-  //         ["remark-lint-final-newline", [2]]
-  //       ]
-  //     }`,
-  //     'a.md': `# Title A`
-  //   });
-
-  //   let messages = [];
-  //   let console = {
-  //     log(message) {
-  //       messages.push(message);
-  //     }
-  //   };
-  //   const tree = new Funnel(input.path(), { include: ['*.md'] })
-  //   const pluginInstance = BroccoliRemark(tree, { console });
-
-  //   output = createBuilder(pluginInstance);
-
-  //   yield output.build();
-
-  //   expect(messages.join('')).to.contain(`a.md:1:1: Missing newline character at end of file`);
-  // }));
 
   it('generates test files by default', co.wrap(function *() {
     input.write({
