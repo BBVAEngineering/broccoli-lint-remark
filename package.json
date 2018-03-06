@@ -36,6 +36,7 @@
     "broccoli-persistent-filter": "^1.4.3",
     "copy-dir": "^0.3.0",
     "fs-extra": "^5.0.0",
+    "json-stable-stringify": "^1.0.1",
     "markdown-extensions": "^1.1.0",
     "md5-hex": "^2.0.0",
     "remark": "^9.0.0",

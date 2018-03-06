@@ -12,10 +12,8 @@ const extensions = require('markdown-extensions');
 const createBuilder = testHelpers.createBuilder;
 const createTempDir = testHelpers.createTempDir;
 
-const _console = console
-
 describe('broccoli-lint-remark', function() {
-  let input, output, console;
+  let input, output;
 
   beforeEach(co.wrap(function *() {
     input = yield createTempDir();
