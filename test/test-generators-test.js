@@ -1,20 +1,17 @@
 const expect = require('chai').expect;
 const testGenerators = require('../lib/test-generators');
 
-const FAIL = {
-  errorCount: 1,
-  messages: [{
-    line: 42,
-    column: 13,
-    message: 'This is not a valid foo',
-    ruleId: 'validate-foo',
-  }, {
-    line: 123,
-    column: 1,
-    message: 'foobar',
-    ruleId: 'comma-dangle',
-  }],
-};
+const FAIL = [{
+  name: 'file.md:42:13',
+  reason: 'This is not a valid foo',
+  ruleId: 'validate-foo',
+  fatal: true
+}, {
+  name: 'file.md:123:1',
+  reason: 'foobar',
+  ruleId: 'comma-dangle',
+  fatal: true
+}];
 
 describe('test-generators', function() {
   describe('qunit', function() {
@@ -23,71 +20,54 @@ describe('test-generators', function() {
     });
 
     it('generates passing test for missing errorCount', function() {
-      expect(this.generate('some/file.js', null, {}).trim()).to.equal(`
-QUnit.module('RemarkLint | some/file.js');
+      expect(this.generate('some/file.md', null).trim()).to.equal(`
+QUnit.module('RemarkLint | some/file.md');
 QUnit.test('should pass RemarkLint', function(assert) {
   assert.expect(1);
-  assert.ok(true, 'some/file.js should pass RemarkLint');
+  assert.ok(true, 'some/file.md should pass RemarkLint');
 });`.trim());
     });
 
     it('generates passing test for errorCount == 0', function() {
-      expect(this.generate('some/file.js', null, { errorCount: 0 }).trim()).to.equal(`
-QUnit.module('RemarkLint | some/file.js');
+      expect(this.generate('some/file.md', [{}]).trim()).to.equal(`
+QUnit.module('RemarkLint | some/file.md');
 QUnit.test('should pass RemarkLint', function(assert) {
   assert.expect(1);
-  assert.ok(true, 'some/file.js should pass RemarkLint');
-});`.trim());
-    });
-
-    it('generates passing test for errorCount == 1', function() {
-      expect(this.generate('some/file.js', null, { errorCount: 1 }).trim()).to.equal(`
-QUnit.module('RemarkLint | some/file.js');
-QUnit.test('should pass RemarkLint', function(assert) {
-  assert.expect(1);
-  assert.ok(false, 'some/file.js should pass RemarkLint');
+  assert.ok(true, 'some/file.md should pass RemarkLint');
 });`.trim());
     });
 
     it('renders error messages', function() {
-      expect(this.generate('some/file.js', null, FAIL).trim()).to.equal(`
-QUnit.module('RemarkLint | some/file.js');
+      expect(this.generate('some/file.md', FAIL).trim()).to.equal(`
+QUnit.module('RemarkLint | some/file.md');
 QUnit.test('should pass RemarkLint', function(assert) {
   assert.expect(1);
-  assert.ok(false, 'some/file.js should pass RemarkLint\\n\\n42:13 - This is not a valid foo (validate-foo)\\n123:1 - foobar (comma-dangle)');
+  assert.ok(false, 'some/file.md should pass RemarkLint\\n\\nfile.md:42:13 - This is not a valid foo (validate-foo)\\nfile.md:123:1 - foobar (comma-dangle)');
 });`.trim());
     });
 
     describe('testOnly', function() {
       it('generates passing test for missing errorCount', function() {
-        expect(this.generate.testOnly('some/file.js', null, {}).trim()).to.equal(`
-QUnit.test('some/file.js', function(assert) {
+        expect(this.generate.testOnly('some/file.md', null).trim()).to.equal(`
+QUnit.test('some/file.md', function(assert) {
   assert.expect(1);
-  assert.ok(true, 'some/file.js should pass RemarkLint');
+  assert.ok(true, 'some/file.md should pass RemarkLint');
 });`.trim());
       });
 
       it('generates passing test for errorCount == 0', function() {
-        expect(this.generate.testOnly('some/file.js', null, { errorCount: 0 }).trim()).to.equal(`
-QUnit.test('some/file.js', function(assert) {
+        expect(this.generate.testOnly('some/file.md', []).trim()).to.equal(`
+QUnit.test('some/file.md', function(assert) {
   assert.expect(1);
-  assert.ok(true, 'some/file.js should pass RemarkLint');
-});`.trim());
-      });
-
-      it('generates passing test for errorCount == 1', function() {
-        expect(this.generate.testOnly('some/file.js', null, { errorCount: 1 }).trim()).to.equal(`
-QUnit.test('some/file.js', function(assert) {
-  assert.expect(1);
-  assert.ok(false, 'some/file.js should pass RemarkLint');
+  assert.ok(true, 'some/file.md should pass RemarkLint');
 });`.trim());
       });
 
       it('renders error messages', function() {
-        expect(this.generate.testOnly('some/file.js', null, FAIL).trim()).to.equal(`
-QUnit.test('some/file.js', function(assert) {
+        expect(this.generate.testOnly('some/file.md', FAIL).trim()).to.equal(`
+QUnit.test('some/file.md', function(assert) {
   assert.expect(1);
-  assert.ok(false, 'some/file.js should pass RemarkLint\\n\\n42:13 - This is not a valid foo (validate-foo)\\n123:1 - foobar (comma-dangle)');
+  assert.ok(false, 'some/file.md should pass RemarkLint\\n\\nfile.md:42:13 - This is not a valid foo (validate-foo)\\nfile.md:123:1 - foobar (comma-dangle)');
 });`.trim());
       });
     });
@@ -99,8 +79,8 @@ QUnit.test('some/file.js', function(assert) {
     });
 
     it('generates passing test for missing errorCount', function() {
-      expect(this.generate('some/file.js', null, {}).trim()).to.equal(`
-describe('RemarkLint | some/file.js', function() {
+      expect(this.generate('some/file.md', null).trim()).to.equal(`
+describe('RemarkLint | some/file.md', function() {
   it('should pass RemarkLint', function() {
     // test passed
   });
@@ -108,32 +88,20 @@ describe('RemarkLint | some/file.js', function() {
     });
 
     it('generates passing test for errorCount == 0', function() {
-      expect(this.generate('some/file.js', null, { errorCount: 0 }).trim()).to.equal(`
-describe('RemarkLint | some/file.js', function() {
+      expect(this.generate('some/file.md', []).trim()).to.equal(`
+describe('RemarkLint | some/file.md', function() {
   it('should pass RemarkLint', function() {
     // test passed
   });
 });`.trim());
     });
 
-    it('generates passing test for errorCount == 1', function() {
-      expect(this.generate('some/file.js', null, { errorCount: 1 }).trim()).to.equal(`
-describe('RemarkLint | some/file.js', function() {
-  it('should pass RemarkLint', function() {
-    // test failed
-    var error = new chai.AssertionError('some/file.js should pass RemarkLint');
-    error.stack = undefined;
-    throw error;
-  });
-});`.trim());
-    });
-
     it('renders error messages', function() {
-      expect(this.generate('some/file.js', null, FAIL).trim()).to.equal(`
-describe('RemarkLint | some/file.js', function() {
+      expect(this.generate('some/file.md', FAIL).trim()).to.equal(`
+describe('RemarkLint | some/file.md', function() {
   it('should pass RemarkLint', function() {
     // test failed
-    var error = new chai.AssertionError('some/file.js should pass RemarkLint\\n\\n42:13 - This is not a valid foo (validate-foo)\\n123:1 - foobar (comma-dangle)');
+    var error = new chai.AssertionError('some/file.md should pass RemarkLint\\n\\nfile.md:42:13 - This is not a valid foo (validate-foo)\\nfile.md:123:1 - foobar (comma-dangle)');
     error.stack = undefined;
     throw error;
   });
@@ -142,34 +110,24 @@ describe('RemarkLint | some/file.js', function() {
 
     describe('testOnly', function() {
       it('generates passing test for missing errorCount', function() {
-        expect(this.generate.testOnly('some/file.js', null, {}).trim()).to.equal(`
-  it('some/file.js', function() {
+        expect(this.generate.testOnly('some/file.md', null).trim()).to.equal(`
+  it('some/file.md', function() {
     // test passed
   });`.trim());
       });
 
       it('generates passing test for errorCount == 0', function() {
-        expect(this.generate.testOnly('some/file.js', null, { errorCount: 0 }).trim()).to.equal(`
-  it('some/file.js', function() {
+        expect(this.generate.testOnly('some/file.md', []).trim()).to.equal(`
+  it('some/file.md', function() {
     // test passed
   });`.trim());
       });
 
-      it('generates passing test for errorCount == 1', function() {
-        expect(this.generate.testOnly('some/file.js', null, { errorCount: 1 }).trim()).to.equal(`
-  it('some/file.js', function() {
-    // test failed
-    var error = new chai.AssertionError('some/file.js should pass RemarkLint');
-    error.stack = undefined;
-    throw error;
-  });`.trim());
-      });
-
       it('renders error messages', function() {
-        expect(this.generate.testOnly('some/file.js', null, FAIL).trim()).to.equal(`
-  it('some/file.js', function() {
+        expect(this.generate.testOnly('some/file.md', FAIL).trim()).to.equal(`
+  it('some/file.md', function() {
     // test failed
-    var error = new chai.AssertionError('some/file.js should pass RemarkLint\\n\\n42:13 - This is not a valid foo (validate-foo)\\n123:1 - foobar (comma-dangle)');
+    var error = new chai.AssertionError('some/file.md should pass RemarkLint\\n\\nfile.md:42:13 - This is not a valid foo (validate-foo)\\nfile.md:123:1 - foobar (comma-dangle)');
     error.stack = undefined;
     throw error;
   });`.trim());

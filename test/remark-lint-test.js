@@ -119,12 +119,12 @@ describe('broccoli-lint-remark', function() {
       yield output.build();
 
       let result = output.read();
-      expect(Object.keys(result)).to.deep.equal(['a.remark-test.js', 'b.remark-test.js']);
+      expect(Object.keys(result)).to.deep.equal(['a.remark-test.js']);
       expect(result['a.remark-test.js'].trim()).to.equal([
         `QUnit.module('RemarkLint | a.md');`,
         `QUnit.test('should pass RemarkLint', function(assert) {`,
         `  assert.expect(1);`,
-        `  assert.ok(false, 'a.md should pass RemarkLint\\n\\n1:1 - Unexpected console statement. (no-console)');`,
+        `  assert.ok(false, 'a.md should pass RemarkLint\\n\\na.md:1:1 - Missing newline character at end of file (final-newline)');`,
         `});`,
       ].join('\n'));
     }));
