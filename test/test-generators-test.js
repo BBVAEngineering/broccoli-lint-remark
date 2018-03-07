@@ -82,7 +82,7 @@ QUnit.test('some/file.md', function(assert) {
 			expect(this.generate('some/file.md', null).trim()).to.equal(`
 describe('RemarkLint | some/file.md', function() {
   it('should pass RemarkLint', function() {
-	// test passed
+    // test passed
   });
 });`.trim());
 		});
@@ -91,7 +91,7 @@ describe('RemarkLint | some/file.md', function() {
 			expect(this.generate('some/file.md', []).trim()).to.equal(`
 describe('RemarkLint | some/file.md', function() {
   it('should pass RemarkLint', function() {
-	// test passed
+    // test passed
   });
 });`.trim());
 		});
@@ -100,10 +100,10 @@ describe('RemarkLint | some/file.md', function() {
 			expect(this.generate('some/file.md', FAIL).trim()).to.equal(`
 describe('RemarkLint | some/file.md', function() {
   it('should pass RemarkLint', function() {
-	// test failed
-	var error = new chai.AssertionError('some/file.md should pass RemarkLint\\n\\nfile.md:42:13 - This is not a valid foo (validate-foo)\\nfile.md:123:1 - foobar (comma-dangle)');
-	error.stack = undefined;
-	throw error;
+    // test failed
+    var error = new chai.AssertionError('some/file.md should pass RemarkLint\\n\\nfile.md:42:13 - This is not a valid foo (validate-foo)\\nfile.md:123:1 - foobar (comma-dangle)');
+    error.stack = undefined;
+    throw error;
   });
 });`.trim());
 		});
@@ -111,25 +111,25 @@ describe('RemarkLint | some/file.md', function() {
 		describe('testOnly', function() {
 			it('generates passing test for missing errorCount', function() {
 				expect(this.generate.testOnly('some/file.md', null).trim()).to.equal(`
-  it('some/file.md', function() {
-	// test passed
+it('some/file.md', function() {
+    // test passed
   });`.trim());
 			});
 
 			it('generates passing test for errorCount == 0', function() {
 				expect(this.generate.testOnly('some/file.md', []).trim()).to.equal(`
-  it('some/file.md', function() {
-	// test passed
+it('some/file.md', function() {
+    // test passed
   });`.trim());
 			});
 
 			it('renders error messages', function() {
 				expect(this.generate.testOnly('some/file.md', FAIL).trim()).to.equal(`
-  it('some/file.md', function() {
-	// test failed
-	var error = new chai.AssertionError('some/file.md should pass RemarkLint\\n\\nfile.md:42:13 - This is not a valid foo (validate-foo)\\nfile.md:123:1 - foobar (comma-dangle)');
-	error.stack = undefined;
-	throw error;
+it('some/file.md', function() {
+    // test failed
+    var error = new chai.AssertionError('some/file.md should pass RemarkLint\\n\\nfile.md:42:13 - This is not a valid foo (validate-foo)\\nfile.md:123:1 - foobar (comma-dangle)');
+    error.stack = undefined;
+    throw error;
   });`.trim());
 			});
 		});
