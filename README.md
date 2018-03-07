@@ -23,6 +23,10 @@ npm install --save-dev broccoli-lint-remark
 
 - `options` {Object}: Options to control how `broccoli-markdown-test` is run.
 
+  - `quiet` {Boolean}: Whether to ignore processed files without any messages in the report. 
+
+    Default: `true`
+
   - `testGenerator` (Accepts two different types of input)
     - `String`: The framework used to test the markdown. You can provide a string one of the predefined test generators is used. Currently supported are `qunit` and `mocha`.
     - {`function(relativePath, results), returns test output string`}: The function used to generate test modules. You can provide a custom function for your client side testing framework of choice.
