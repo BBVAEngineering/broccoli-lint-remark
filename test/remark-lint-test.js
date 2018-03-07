@@ -100,6 +100,30 @@ describe('broccoli-lint-remark', function() {
       ].join('\n'));
     }));
 
+    it('qunit: generates QUnit tests for valid output', co.wrap(function *() {
+      input.write({
+        '.remarkrc': `{ "plugins": [["remark-lint-final-newline", [2]]] }`,
+        'a.md': `# Title A\n`
+      });
+
+      const tree = new Funnel(input.path(), { include: ['*.*'] })
+      const pluginInstance = BroccoliRemark(tree, { testGenerator: 'qunit' });
+
+      output = createBuilder(pluginInstance);
+
+      yield output.build();
+
+      let result = output.read();
+      expect(Object.keys(result)).to.deep.equal(['a.remark-test.js']);
+      expect(result['a.remark-test.js'].trim()).to.equal([
+        `QUnit.module('RemarkLint | a.md');`,
+        `QUnit.test('should pass RemarkLint', function(assert) {`,
+        `  assert.expect(1);`,
+        `  assert.ok(true, 'a.md should pass RemarkLint');`,
+        `});`,
+      ].join('\n'));
+    }));
+
     it('mocha: generates Mocha tests', co.wrap(function *() {
       input.write({
         '.remarkrc': `{ "plugins": [["remark-lint-final-newline", [2]]] }`,
@@ -122,6 +146,30 @@ describe('broccoli-lint-remark', function() {
         `    var error = new chai.AssertionError('a.md should pass RemarkLint\\n\\na.md:1:1 - Missing newline character at end of file (final-newline)');`,
         `    error.stack = undefined;`,
         `    throw error;`,
+        `  });`,
+        `});`,
+      ].join('\n'));
+    }));
+
+    it('mocha: generates Mocha tests for valid input', co.wrap(function *() {
+      input.write({
+        '.remarkrc': `{ "plugins": [["remark-lint-final-newline", [2]]] }`,
+        'a.md': `# Title A\n`
+      });
+
+      const tree = new Funnel(input.path(), { include: ['*.*'] })
+      const pluginInstance = BroccoliRemark(tree, { testGenerator: 'mocha' });
+
+      output = createBuilder(pluginInstance);
+
+      yield output.build();
+
+      let result = output.read();
+      expect(Object.keys(result)).to.deep.equal(['a.remark-test.js']);
+      expect(result['a.remark-test.js'].trim()).to.equal([
+        `describe('RemarkLint | a.md', function() {`,
+        `  it('should pass RemarkLint', function() {`,
+        `    // test passed`,
         `  });`,
         `});`,
       ].join('\n'));
