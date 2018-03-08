@@ -1,0 +1,56 @@
+{
+  "name": "broccoli-lint-remark",
+  "version": "1.0.0",
+  "description": "broccoli wrapper for remark-lint",
+  "main": "lib/index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "test": "mocha test/*test.js test/**/*test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/BBVAEngineering/broccoli-lint-remark.git"
+  },
+  "keywords": [
+    "remark",
+    "lint",
+    "broccoli",
+    "broccoli-remark",
+    "broccoli-lint",
+    "validate",
+    "markdown",
+    "md",
+    "broccoli-plugin"
+  ],
+  "files": [
+    "lib"
+  ],
+  "author": "BBVAEngineering",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ember-cli/broccoli-lint-remark/issues"
+  },
+  "homepage": "https://github.com/ember-cli/broccoli-lint-remark",
+  "dependencies": {
+    "aot-test-generators": "^0.1.0",
+    "broccoli-persistent-filter": "^1.4.3",
+    "json-stable-stringify": "^1.0.1",
+    "markdown-extensions": "^1.1.0",
+    "md5-hex": "^2.0.0",
+    "remark": "^9.0.0",
+    "unified-engine": "^5.1.0"
+  },
+  "devDependencies": {
+    "broccoli-funnel": "^2.0.1",
+    "broccoli-test-helper": "^1.2.0",
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "co": "^4.6.0",
+    "eslint": "^4.18.2",
+    "eslint-config-bbva": "^2.0.0",
+    "fs-extra": "^5.0.0",
+    "mocha": "^5.0.2",
+    "remark-lint-final-newline": "^1.0.1",
+    "sinon-chai": "^3.0.0"
+  }
+}
