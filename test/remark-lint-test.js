@@ -2,7 +2,6 @@
 
 const path = require('path');
 const expect = require('./chai').expect;
-const co = require('co');
 const testHelpers = require('broccoli-test-helper');
 const BroccoliRemark = require('..');
 const fs = require('fs-extra');
@@ -15,20 +14,20 @@ const createTempDir = testHelpers.createTempDir;
 describe('broccoli-lint-remark', function() {
 	let input, output;
 
-	beforeEach(co.wrap(function *() {
-		input = yield createTempDir();
+	beforeEach(async function() {
+		input = await createTempDir();
 		const modulesPath = path.join(process.cwd(), 'node_modules');
 		const modulesTmpPath = path.join(input.path(), 'node_modules');
 		// Clone "node_modules" no tmp dir.
 		fs.ensureSymlinkSync(modulesPath, modulesTmpPath);
-	}));
+	});
 
-	afterEach(co.wrap(function *() {
-		yield input.dispose();
+	afterEach(async function() {
+		await input.dispose();
 		if (output) {
-			yield output.dispose();
+			await output.dispose();
 		}
-	}));
+	});
 
 	it('exports a static immutable "testGenerators" list', function() {
 		expect(BroccoliRemark.testGenerators).to.deep.equal(['qunit', 'mocha']);
@@ -38,7 +37,7 @@ describe('broccoli-lint-remark', function() {
 		expect(BroccoliRemark.testGenerators).to.deep.equal(['qunit', 'mocha']);
 	});
 
-	it('generates test files by default', co.wrap(function *() {
+	it('generates test files by default', async function() {
 		input.write({
 			'.remarkrc': `{ "plugins": [["remark-lint-final-newline", [2]]] }`,
 			'a.md': `# Title A`,
@@ -50,12 +49,12 @@ describe('broccoli-lint-remark', function() {
 
 		output = createBuilder(pluginInstance);
 
-		yield output.build();
+		await output.build();
 
 		expect(Object.keys(output.read())).to.deep.equal(['a.remark-test.js', 'b.remark-test.js']);
-	}));
+	});
 
-	it('generates test files for any kind of markdown file', co.wrap(function *() {
+	it('generates test files for any kind of markdown file', async function() {
 		const files = extensions.reduce((acc, ext, index) => {
 			acc[`${index}.${ext}`] = '';
 			return acc;
@@ -69,14 +68,14 @@ describe('broccoli-lint-remark', function() {
 
 		output = createBuilder(pluginInstance);
 
-		yield output.build();
+		await output.build();
 
 		expect(Object.keys(output.read())).to.deep.equal(outputFiles);
-	}));
+	});
 
 
 	describe('testGenerator', function() {
-		it('qunit: generates QUnit tests', co.wrap(function *() {
+		it('qunit: generates QUnit tests', async function() {
 			input.write({
 				'.remarkrc': `{ "plugins": [["remark-lint-final-newline", [2]]] }`,
 				'a.md': `# Title A`
@@ -87,7 +86,7 @@ describe('broccoli-lint-remark', function() {
 
 			output = createBuilder(pluginInstance);
 
-			yield output.build();
+			await output.build();
 
 			let result = output.read();
 			expect(Object.keys(result)).to.deep.equal(['a.remark-test.js']);
@@ -98,9 +97,9 @@ describe('broccoli-lint-remark', function() {
 				`  assert.ok(false, 'a.md should pass RemarkLint\\n\\na.md:1:1 - Missing newline character at end of file (final-newline)');`,
 				`});`,
 			].join('\n'));
-		}));
+		});
 
-		it('qunit: generates QUnit tests for valid output', co.wrap(function *() {
+		it('qunit: generates QUnit tests for valid output', async function() {
 			input.write({
 				'.remarkrc': `{ "plugins": [["remark-lint-final-newline", [2]]] }`,
 				'a.md': `# Title A\n`
@@ -111,7 +110,7 @@ describe('broccoli-lint-remark', function() {
 
 			output = createBuilder(pluginInstance);
 
-			yield output.build();
+			await output.build();
 
 			let result = output.read();
 			expect(Object.keys(result)).to.deep.equal(['a.remark-test.js']);
@@ -122,9 +121,9 @@ describe('broccoli-lint-remark', function() {
 				`  assert.ok(true, 'a.md should pass RemarkLint');`,
 				`});`,
 			].join('\n'));
-		}));
+		});
 
-		it('mocha: generates Mocha tests', co.wrap(function *() {
+		it('mocha: generates Mocha tests', async function() {
 			input.write({
 				'.remarkrc': `{ "plugins": [["remark-lint-final-newline", [2]]] }`,
 				'a.md': `# Title A`
@@ -135,7 +134,7 @@ describe('broccoli-lint-remark', function() {
 
 			output = createBuilder(pluginInstance);
 
-			yield output.build();
+			await output.build();
 
 			let result = output.read();
 			expect(Object.keys(result)).to.deep.equal(['a.remark-test.js']);
@@ -149,9 +148,9 @@ describe('broccoli-lint-remark', function() {
 				`  });`,
 				`});`,
 			].join('\n'));
-		}));
+		});
 
-		it('mocha: generates Mocha tests for valid input', co.wrap(function *() {
+		it('mocha: generates Mocha tests for valid input', async function() {
 			input.write({
 				'.remarkrc': `{ "plugins": [["remark-lint-final-newline", [2]]] }`,
 				'a.md': `# Title A\n`
@@ -162,7 +161,7 @@ describe('broccoli-lint-remark', function() {
 
 			output = createBuilder(pluginInstance);
 
-			yield output.build();
+			await output.build();
 
 			let result = output.read();
 			expect(Object.keys(result)).to.deep.equal(['a.remark-test.js']);
@@ -173,9 +172,9 @@ describe('broccoli-lint-remark', function() {
 				`  });`,
 				`});`,
 			].join('\n'));
-		}));
+		});
 
-		it('custom: generates tests via custom test generator function', co.wrap(function *() {
+		it('custom: generates tests via custom test generator function', async function() {
 			input.write({
 				'.remarkrc': `{ "plugins": [["remark-lint-final-newline", [2]]] }`,
 				'a.md': `# Title A`
@@ -191,7 +190,7 @@ describe('broccoli-lint-remark', function() {
 
 			output = createBuilder(pluginInstance);
 
-			yield output.build();
+			await output.build();
 
 			expect(args).to.have.lengthOf(1);
 			expect(args[0][0]).to.equal('a.md');
@@ -215,6 +214,6 @@ describe('broccoli-lint-remark', function() {
 				file: 'a.md',
 				fatal: true
 			}]);
-		}));
+		});
 	});
 });
