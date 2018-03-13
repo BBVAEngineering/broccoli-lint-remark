@@ -1,6 +1,6 @@
 {
   "name": "broccoli-lint-remark",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "broccoli wrapper for remark-lint",
   "main": "lib/index.js",
   "scripts": {
