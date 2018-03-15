@@ -23,9 +23,23 @@ npm install --save-dev broccoli-lint-remark
 
 - `options` {Object}: Options to control how `broccoli-markdown-test` is run.
 
-  - `quiet` {Boolean}: Whether to ignore processed files without any messages in the report. 
+  - `remark` {Object}: Any option available for **remark** and [unified-engine](https://github.com/unifiedjs/unified-engine). 
 
-    Default: `true`
+    Default: 
+    ```json
+    {
+      "name": "remark",
+      "pluginPrefix": "remark",
+      "presetPrefix": "remark-preset",
+      "packageField": "remarkConfig",
+      "rcName": ".remarkrc",
+      "ignoreName": ".remarkignore",
+      "quiet": true,
+      "color": true,
+      "output": false,
+      "detectConfig": true
+    }
+    ```
 
   - `testGenerator` (Accepts two different types of input)
     - `String`: The framework used to test the markdown. You can provide a string one of the predefined test generators is used. Currently supported are `qunit` and `mocha`.
@@ -55,22 +69,7 @@ npm install --save-dev broccoli-lint-remark
 
   - `persist` {Boolean}: Persist the state of filter output across restarts
 
-    Default: `false`.
-
-  - `codeTransforms` {Object}: An object with codefences types and functions for converting code to code assertions. By default, there are implemented `javascript`, `html` and `json` code transforms. This option is merged with defaults.
-
-    Example usage:
-
-    ```javascript
-      var path = require('path');
-
-      return new MarkdownTest(inputNode, {
-        testGenerator: 'qunit',
-        codeTransforms: {
-          text: (code) => "console.log('" + code + "');"
-        }
-      });
-    ```
+    Default: `true`.
 
 ## Contribute
 
