@@ -39,9 +39,9 @@ describe('broccoli-lint-remark', function() {
 
 	it('generates test files by default', async function() {
 		input.write({
-			'.remarkrc': `{ "plugins": [["remark-lint-final-newline", [2]]] }`,
-			'a.md': `# Title A`,
-			'b.md': `# Title B`
+			'.remarkrc': '{ "plugins": [["remark-lint-final-newline", [2]]] }',
+			'a.md': '# Title A',
+			'b.md': '# Title B'
 		});
 
 		const tree = new Funnel(input.path(), { include: ['*.md'] })
@@ -77,8 +77,8 @@ describe('broccoli-lint-remark', function() {
 	describe('testGenerator', function() {
 		it('qunit: generates QUnit tests', async function() {
 			input.write({
-				'.remarkrc': `{ "plugins": [["remark-lint-final-newline", [2]]] }`,
-				'a.md': `# Title A`
+				'.remarkrc': '{ "plugins": [["remark-lint-final-newline", [2]]] }',
+				'a.md': '# Title A'
 			});
 
 			const tree = new Funnel(input.path(), { include: ['*.*'] })
@@ -91,18 +91,18 @@ describe('broccoli-lint-remark', function() {
 			let result = output.read();
 			expect(Object.keys(result)).to.deep.equal(['a.remark-test.js']);
 			expect(result['a.remark-test.js'].trim()).to.equal([
-				`QUnit.module('RemarkLint | a.md');`,
-				`QUnit.test('should pass RemarkLint', function(assert) {`,
-				`  assert.expect(1);`,
-				`  assert.ok(false, 'a.md should pass RemarkLint\\n\\na.md:1:1 - Missing newline character at end of file (final-newline)');`,
-				`});`,
+				'QUnit.module(\'RemarkLint | a.md\');',
+				'QUnit.test(\'should pass RemarkLint\', function(assert) {',
+				'  assert.expect(1);',
+				'  assert.ok(false, \'a.md should pass RemarkLint\\n\\na.md:1:1 - Missing newline character at end of file (final-newline)\');',
+				'});'
 			].join('\n'));
 		});
 
 		it('qunit: generates QUnit tests for valid output', async function() {
 			input.write({
-				'.remarkrc': `{ "plugins": [["remark-lint-final-newline", [2]]] }`,
-				'a.md': `# Title A\n`
+				'.remarkrc': '{ "plugins": [["remark-lint-final-newline", [2]]] }',
+				'a.md': '# Title A\n'
 			});
 
 			const tree = new Funnel(input.path(), { include: ['*.*'] })
@@ -115,18 +115,18 @@ describe('broccoli-lint-remark', function() {
 			let result = output.read();
 			expect(Object.keys(result)).to.deep.equal(['a.remark-test.js']);
 			expect(result['a.remark-test.js'].trim()).to.equal([
-				`QUnit.module('RemarkLint | a.md');`,
-				`QUnit.test('should pass RemarkLint', function(assert) {`,
-				`  assert.expect(1);`,
-				`  assert.ok(true, 'a.md should pass RemarkLint');`,
-				`});`,
+				'QUnit.module(\'RemarkLint | a.md\');',
+				'QUnit.test(\'should pass RemarkLint\', function(assert) {',
+				'  assert.expect(1);',
+				'  assert.ok(true, \'a.md should pass RemarkLint\');',
+				'});'
 			].join('\n'));
 		});
 
 		it('mocha: generates Mocha tests', async function() {
 			input.write({
-				'.remarkrc': `{ "plugins": [["remark-lint-final-newline", [2]]] }`,
-				'a.md': `# Title A`
+				'.remarkrc': '{ "plugins": [["remark-lint-final-newline", [2]]] }',
+				'a.md': '# Title A'
 			});
 
 			const tree = new Funnel(input.path(), { include: ['*.*'] })
@@ -139,21 +139,21 @@ describe('broccoli-lint-remark', function() {
 			let result = output.read();
 			expect(Object.keys(result)).to.deep.equal(['a.remark-test.js']);
 			expect(result['a.remark-test.js'].trim()).to.equal([
-				`describe('RemarkLint | a.md', function() {`,
-				`  it('should pass RemarkLint', function() {`,
-				`    // test failed`,
-				`    var error = new chai.AssertionError('a.md should pass RemarkLint\\n\\na.md:1:1 - Missing newline character at end of file (final-newline)');`,
-				`    error.stack = undefined;`,
-				`    throw error;`,
-				`  });`,
-				`});`,
+				'describe(\'RemarkLint | a.md\', function() {',
+				'  it(\'should pass RemarkLint\', function() {',
+				'    // test failed',
+				'    var error = new chai.AssertionError(\'a.md should pass RemarkLint\\n\\na.md:1:1 - Missing newline character at end of file (final-newline)\');',
+				'    error.stack = undefined;',
+				'    throw error;',
+				'  });',
+				'});'
 			].join('\n'));
 		});
 
 		it('mocha: generates Mocha tests for valid input', async function() {
 			input.write({
-				'.remarkrc': `{ "plugins": [["remark-lint-final-newline", [2]]] }`,
-				'a.md': `# Title A\n`
+				'.remarkrc': '{ "plugins": [["remark-lint-final-newline", [2]]] }',
+				'a.md': '# Title A\n'
 			});
 
 			const tree = new Funnel(input.path(), { include: ['*.*'] })
@@ -166,18 +166,18 @@ describe('broccoli-lint-remark', function() {
 			let result = output.read();
 			expect(Object.keys(result)).to.deep.equal(['a.remark-test.js']);
 			expect(result['a.remark-test.js'].trim()).to.equal([
-				`describe('RemarkLint | a.md', function() {`,
-				`  it('should pass RemarkLint', function() {`,
-				`    // test passed`,
-				`  });`,
-				`});`,
+				'describe(\'RemarkLint | a.md\', function() {',
+				'  it(\'should pass RemarkLint\', function() {',
+				'    // test passed',
+				'  });',
+				'});'
 			].join('\n'));
 		});
 
 		it('custom: generates tests via custom test generator function', async function() {
 			input.write({
-				'.remarkrc': `{ "plugins": [["remark-lint-final-newline", [2]]] }`,
-				'a.md': `# Title A`
+				'.remarkrc': '{ "plugins": [["remark-lint-final-newline", [2]]] }',
+				'a.md': '# Title A'
 			});
 
 			let args = [];
