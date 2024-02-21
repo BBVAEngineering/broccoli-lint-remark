@@ -1,3 +1,5 @@
+# DEPRECATED
+
 # broccoli-lint-remark
 
 [![Build Status](https://travis-ci.org/BBVAEngineering/broccoli-lint-remark.svg?branch=master)](https://travis-ci.org/BBVAEngineering/broccoli-lint-remark)
